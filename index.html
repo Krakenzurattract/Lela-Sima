@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Russian Adventurers</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700;900&family=Roboto+Mono:wght@400;700&display=swap');
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: #000;
+      color: #eee;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: url('background-hero.webp') no-repeat center center;
+      padding: 10vh 8vw;
+      overflow: hidden;
+    }
+
+    #hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.0);   /* ← вот это значение затемняет */
+    z-index: 1;
+    }
+    
+    canvas#particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+    }
+
+    .glow-title {
+      font-size: clamp(5.5rem, 15vw, 12rem);
+      font-weight: 900;
+      line-height: 0.85;
+      letter-spacing: -0.05em;
+      color: #fff;
+      text-shadow:
+        0 0 25px #ff00ff88,
+        0 0 50px #00ffff88,
+        0 0 80px #ffff0088,
+        0 0 110px #ff00ff88,
+        0 0 140px #00ff8888;
+      animation: rgbPulse 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes rgbPulse {
+      0%   { text-shadow: 0 0 25px #ff00ff88, 0 0 50px #00ffff88, 0 0 80px #ffff0088, 0 0 110px #ff00ff88, 0 0 140px #00ff8888; }
+      25%  { text-shadow: 0 0 25px #00ffff88, 0 0 50px #ffff0088, 0 0 80px #ff00ff88, 0 0 110px #00ff8888, 0 0 140px #ff00aa88; }
+      50%  { text-shadow: 0 0 25px #ffff0088, 0 0 50px #ff00ff88, 0 0 80px #00ff8888, 0 0 110px #ff00aa88, 0 0 140px #00ffff88; }
+      75%  { text-shadow: 0 0 25px #ff00ff88, 0 0 50px #00ff8888, 0 0 80px #ff00aa88, 0 0 110px #00ffff88, 0 0 140px #ffff0088; }
+      100% { text-shadow: 0 0 25px #00ffff88, 0 0 50px #ffff0088, 0 0 80px #ff00ff88, 0 0 110px #00ff8888, 0 0 140px #ff00aa88; }
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 6vh;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+      letter-spacing: 0.5em;
+      opacity: 0.3;
+      animation: blink 3s infinite;
+    }
+
+    @keyframes blink {
+      0%,100% { opacity: 0.25; }
+      50%     { opacity: 0.55; }
+    }
+
+    /* ОБВИНЯЮТСЯ */
+    #accused-section {
+      min-height: 100vh;
+      background: #000;
+      padding: 10vh 8vw;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 6vw;
+      flex-wrap: wrap;
+    }
+
+    .accused-left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.5rem;                    /* расстояние заголовок → фото */
+      flex: 0 0 auto;
+      max-width: 45vw;
+    }
+
+    .accused-title {
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 900;
+      line-height: 0.92;
+      color: #fff;
+      text-shadow:
+        0 0 25px #ff00ff88,
+        0 0 50px #00ffff88,
+        0 0 80px #ffff0088,
+        0 0 110px #ff00ff88,
+        0 0 140px #00ff8888;
+      animation: rgbPulse 4s ease-in-out infinite alternate;
+    }
+
+    .photo-wrapper {
+      width: 650px;
+      max-width: 100%;
+      border: 2px solid #111;
+      box-shadow: 0 0 40px rgba(255, 50, 120, 0.15);
+      margin-left: 2rem;
+    }
+
+    .photo-wrapper img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .accused-content {
+      flex: 1;
+      min-width: 420px;
+      max-width: 850px;
+      padding-top: 2rem;               /* дополнительный отступ сверху для выравнивания */
+    }
+
+    .ticker-container {
+      height: 70vh;
+      overflow: hidden;
+      position: relative;
+      font-family: 'Roboto Mono', monospace;
+      margin-top: 4rem;                /* ← основной сдвиг списка вниз (от уровня фото) */
+    }
+
+    .ticker {
+      position: absolute;
+      top: 0;                          /* начинаем сверху контейнера */
+      width: 100%;
+      animation: scrollUp linear infinite;
+      animation-duration: 40s;
+      will-change: transform;
+    }
+
+    .ticker-item {
+      font-size: clamp(1.6rem, 4.2vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.7;
+      padding: 0.5em 0;
+      color: #f0f0f0;
+      text-shadow: 0 0 15px rgba(255, 80, 140, 0.6);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @keyframes scrollUp {
+      0%   { transform: translateY(100%); }
+      100% { transform: translateY(-100%); }
+    }
+
+    .ticker.duplicate {
+      animation-delay: -20s;
+    }
+  </style>
+</head>
+<body>
+
+  <section id="hero">
+    <canvas id="particles"></canvas>
+    <div class="hero-content">
+      <h1 class="glow-title">Russian<br>Adventurers</h1>
+    </div>
+    <div class="scroll-hint">SCROLL ↓</div>
+  </section>
+
+  <section id="accused-section">
+    <div class="accused-left">
+      <div class="accused-title">ОБВИНЯЮТСЯ В:</div>
+      <div class="photo-wrapper">
+        <img src="your-photo.jpg" alt="Обвиняемый" />
+      </div>
+    </div>
+
+    <div class="accused-content">
+      <div class="ticker-container">
+        <div class="ticker" id="ticker1"></div>
+        <div class="ticker duplicate" id="ticker2"></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // частицы
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 1.4 + 0.5;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        this.life = Math.random() * 600 + 400;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life--;
+        if (this.life < 0 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+      }
+      draw() {
+        ctx.globalAlpha = this.life / 1000;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(this.x - this.size/2, this.y - this.size/2, this.size, this.size);
+      }
+    }
+
+    for (let i = 0; i < 40; i++) particles.push(new Particle());
+
+    function animateParticles() {
+      ctx.fillStyle = 'rgba(0,0,0,0.05)';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // обвинения
+    const accusations = [
+      "Незаконное хранение оружия",
+      "Мошенничество",
+      "Контрабанда",
+      "Отмывание денежных средств",
+      "Хищение имущества",
+      "Взяточничество",
+      "Грабёж",
+      "Коррупция",
+      "Разбой",
+      "Подделка документов",
+      "Вымогательство",
+      "Незаконное предпринимательство",
+      "Фальсификация данных",
+      "Вмешательство в работу информационных систем",
+      "Распространение вредоносного ПО",
+      "Шантаж",
+      "Злоупотребление должностными полномочиями",
+      "Незаконное лишение свободы",
+      "Причинение вреда здоровью",
+      "Уклонение от воинской службы",
+      "Угон транспортного средства",
+      "Изнасилование",
+      "Торговля людьми",
+      "Нарушение авторского права",
+      "Киберпреступления",
+      "Сексуальное насилие",
+      "Нарушение законов об охране окружающей среды",
+      "Организация поддельных органов власти",
+      "Военное преступление",
+      "Утеря или уничтожение доказательств",
+      "Неуплата налогов"
+    ];
+
+    const ticker1 = document.getElementById('ticker1');
+    const ticker2 = document.getElementById('ticker2');
+
+    accusations.forEach(text => {
+      const item = document.createElement('div');
+      item.className = 'ticker-item';
+      item.textContent = text;
+      ticker1.appendChild(item.cloneNode(true));
+      ticker2.appendChild(item);
+    });
+
+    ticker1.innerHTML += ticker1.innerHTML;
+    ticker2.innerHTML += ticker2.innerHTML;
+  </script>
+</body>
+</html>
