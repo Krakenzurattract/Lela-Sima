@@ -189,13 +189,19 @@
     /* АДАПТИВ ДЛЯ МОБИЛЬНЫХ (ДО 768px)              */
     /* ============================================== */
     @media (max-width: 768px) {
+      body {
+        overflow-x: hidden;
+      }
+
       #hero {
-        padding: 8vh 5vw;
+        padding: 6vh 4vw 8vh;
+        background-position: center top;
       }
 
       .glow-title {
-        font-size: clamp(3.5rem, 12vw, 6rem);
-        line-height: 0.9;
+        font-size: clamp(3rem, 11vw, 5.5rem);
+        line-height: 0.95;
+        padding: 0 10px;
       }
 
       .scroll-hint {
@@ -205,59 +211,61 @@
 
       #accused-section {
         flex-direction: column;
-        padding: 8vh 5vw;
-        align-items: center;
-        text-align: center;
+        padding: 6vh 5vw;
+        gap: 4vw;
       }
 
       .accused-left {
-        max-width: 100%;
+        width: 100%;
+        max-width: none;
         align-items: center;
-        gap: 1.5rem;
+        gap: 1.2rem;
       }
 
       .accused-title {
-        font-size: clamp(2.2rem, 8vw, 4rem);
+        font-size: clamp(2.4rem, 9vw, 4.2rem);
         text-align: center;
+        margin-bottom: 0.5rem;
       }
 
       .photo-wrapper {
-        width: 320px;
-        max-width: 90vw;
+        width: 90vw;
+        max-width: 360px;
         margin: 0 auto;
-        margin-left: 0; /* убираем сдвиг вправо на мобильных */
+        margin-left: 0 !important;
+        border-width: 1px;
       }
 
       .accused-content {
         width: 100%;
-        max-width: none;
-        padding-top: 1rem;
+        padding: 0 2vw;
       }
 
       .ticker-container {
-        height: 60vh;
-        margin-top: 2rem;
+        height: 55vh;
+        margin-top: 1.5rem;
       }
 
       .ticker-item {
-        font-size: clamp(1.2rem, 4.5vw, 1.8rem);
-        line-height: 1.5;
-        padding: 0.4em 0;
+        font-size: clamp(1.15rem, 4.2vw, 1.7rem);
+        line-height: 1.55;
+        padding: 0.35em 0;
       }
     }
 
-    /* Очень маленькие экраны (до 480px) */
-    @media (max-width: 480px) {
+    /* Очень маленькие экраны (до 420px) */
+    @media (max-width: 420px) {
       .glow-title {
-        font-size: clamp(2.8rem, 10vw, 4.5rem);
+        font-size: clamp(2.6rem, 10vw, 4.5rem);
       }
 
       .photo-wrapper {
-        width: 280px;
+        width: 94vw;
+        max-width: 300px;
       }
 
       .ticker-item {
-        font-size: clamp(1.1rem, 4vw, 1.6rem);
+        font-size: clamp(1.05rem, 4vw, 1.55rem);
       }
     }
   </style>
