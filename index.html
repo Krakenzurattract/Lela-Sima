@@ -32,11 +32,11 @@
     }
 
     #hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.0);   /* ← вот это значение затемняет */
-    z-index: 1;
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.0);
+      z-index: 1;
     }
     
     canvas#particles {
@@ -107,7 +107,7 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 1.5rem;                    /* расстояние заголовок → фото */
+      gap: 1.5rem;
       flex: 0 0 auto;
       max-width: 45vw;
     }
@@ -144,7 +144,7 @@
       flex: 1;
       min-width: 420px;
       max-width: 850px;
-      padding-top: 2rem;               /* дополнительный отступ сверху для выравнивания */
+      padding-top: 2rem;
     }
 
     .ticker-container {
@@ -152,12 +152,12 @@
       overflow: hidden;
       position: relative;
       font-family: 'Roboto Mono', monospace;
-      margin-top: 4rem;                /* ← основной сдвиг списка вниз (от уровня фото) */
+      margin-top: 4rem;
     }
 
     .ticker {
       position: absolute;
-      top: 0;                          /* начинаем сверху контейнера */
+      top: 0;
       width: 100%;
       animation: scrollUp linear infinite;
       animation-duration: 40s;
@@ -183,6 +183,82 @@
 
     .ticker.duplicate {
       animation-delay: -20s;
+    }
+
+    /* ============================================== */
+    /* АДАПТИВ ДЛЯ МОБИЛЬНЫХ (ДО 768px)              */
+    /* ============================================== */
+    @media (max-width: 768px) {
+      #hero {
+        padding: 8vh 5vw;
+      }
+
+      .glow-title {
+        font-size: clamp(3.5rem, 12vw, 6rem);
+        line-height: 0.9;
+      }
+
+      .scroll-hint {
+        font-size: 0.9rem;
+        letter-spacing: 0.3em;
+      }
+
+      #accused-section {
+        flex-direction: column;
+        padding: 8vh 5vw;
+        align-items: center;
+        text-align: center;
+      }
+
+      .accused-left {
+        max-width: 100%;
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      .accused-title {
+        font-size: clamp(2.2rem, 8vw, 4rem);
+        text-align: center;
+      }
+
+      .photo-wrapper {
+        width: 320px;
+        max-width: 90vw;
+        margin: 0 auto;
+        margin-left: 0; /* убираем сдвиг вправо на мобильных */
+      }
+
+      .accused-content {
+        width: 100%;
+        max-width: none;
+        padding-top: 1rem;
+      }
+
+      .ticker-container {
+        height: 60vh;
+        margin-top: 2rem;
+      }
+
+      .ticker-item {
+        font-size: clamp(1.2rem, 4.5vw, 1.8rem);
+        line-height: 1.5;
+        padding: 0.4em 0;
+      }
+    }
+
+    /* Очень маленькие экраны (до 480px) */
+    @media (max-width: 480px) {
+      .glow-title {
+        font-size: clamp(2.8rem, 10vw, 4.5rem);
+      }
+
+      .photo-wrapper {
+        width: 280px;
+      }
+
+      .ticker-item {
+        font-size: clamp(1.1rem, 4vw, 1.6rem);
+      }
     }
   </style>
 </head>
